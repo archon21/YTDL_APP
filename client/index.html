@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Steal This Video</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Oxygen&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body onload="getVideos()">
+    <nav class="nav flex row wrap align-center justify-center">
+      <a class="nav__link" href="/">Home</a>
+    </nav>
+    <div class="flex column align-center w-100">
+      <div class="home__downloader flex column align-center w-100">
+        <div class="home__downloader__text flex column align-center w-90">
+          <h1>Downloader</h1>
+          <h4>
+            Enter Youtube url to download the video with ytdl-core and placed in
+            a public directory, and have the metadata and file reference saved
+            in a mysql database. The entry will then be placed below where you
+            can clink a link that leads to a readableStream for the video.
+          </h4>
+        </div>
+        <div class="flex row wrap align-center justify-center my-20px w-90">
+          <input
+            id="download-link"
+            class="input"
+            placeholder="Enter the Youtube link you want to download!"
+          />
+          <button onclick="downloadLink()" class="button">
+            Submit
+          </button>
+        </div>
+      </div>
+      <div id="video-div" class="flex column align-center w-100"></div>
+    </div>
+  </body>
+  <script>
+    downloadLink = async () => {
+      const url = document.getElementById('download-link').value;
+      const res = await fetch('/api/ytdl', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ url })
+      });
+      const data = await res.json();
+      const videoDiv = document.getElementById('video-div');
+      const container = templator(data);
+      videoDiv.appendChild(container);
+    };
+
+    getVideos = async () => {
+      const res = await fetch('/api/videos', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await res.json();
+      const videoDiv = document.getElementById('video-div');
+      data.forEach(entry => {
+        const container = templator(entry);
+        videoDiv.appendChild(container);
+      });
+    };
+
+    templator = entry => {
+      const keyValCollection = Object.entries(entry);
+      const container = document.createElement('DIV');
+      container.className =
+        'home__videos__container flex row wrap my-20px w-90';
+      const firstContainer = document.createElement('DIV');
+      const secondContainer = document.createElement('DIV');
+      firstContainer.className = 'flex column w-45 break-all';
+      secondContainer.className = 'flex column w-45 align-center';
+      keyValCollection.forEach(keyVal => {
+        const [key, val] = keyVal;
+        console.log(keyVal, key, val);
+        if (
+          key === 'video_thumbnail' ||
+          key === 'video_ref' ||
+
+          (key === 'id' && keyVal[key])
+        ) {
+          if (key === 'video_ref') {
+            const link = document.createElement('A');
+            const img = document.createElement('IMG');
+            const overlay = document.createElement('DIV');
+            img.src = entry.video_thumbnail;
+            link.href = `/videos/${val}`;
+            link.className = 'video__thumbnail';
+            link.target = '_blank'
+            img.className = 'video__thumbnail__img';
+            link.appendChild(img);
+            overlay.className = 'video__thumbnail__overlay';
+            overlay.innerText = 'View';
+            link.append(overlay);
+
+            secondContainer.append(link);
+          } else if (key === 'video_thumbnail') {
+          }
+        } else {
+          const span = document.createElement('SPAN');
+          span.innerText = `${key
+            .split('_')
+            .map(word => word[0].toUpperCase().concat(word.slice(1)))
+            .join(' ')}: ${val}`;
+          firstContainer.append(span);
+        }
+
+        container.append(firstContainer);
+        container.append(secondContainer);
+      });
+      return container;
+    };
+  </script>
+</html>

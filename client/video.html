@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Steal This Video</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Oxygen&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body onload="onLoad()">
+    <nav class="nav flex row wrap align-center justify-center">
+      <a class="nav__link" href="/">Home</a>
+    </nav>
+    <div id="video" class="flex column align-center w-100 h-100 y-hidden">
+      <div class="video flex row w-100 h-100 my-20px align-start">
+        <div
+          id="video-details"
+          class="video__details flex column align-center w-45"
+        ></div>
+        <video
+          autoplay
+          id="video__player"
+          class="video__video w-45"
+          controls
+        ></video>
+      </div>
+    </div>
+  </body>
+  <script>
+    onLoad = () => {
+      const pathArr = document.URL.split('/');
+      const ref = pathArr[pathArr.length - 1];
+      console.log(ref);
+      getVideo(ref);
+      getData(ref);
+    };
+
+    getData = async ref => {
+      const res = await fetch(`/api/videos/data`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ ref })
+      });
+
+      const data = await res.json();
+
+      templator(data[0]);
+    };
+
+    getVideo = ref => {
+      console.log('Loaded');
+      const video = document.getElementById('video__player');
+      video.src = '/api/videos/' + ref + '/get';
+    };
+
+    templator = entry => {
+      const keyValCollection = Object.entries(entry);
+
+      const videoDetails = document.getElementById('video-details');
+      const video = document.getElementById('video');
+      keyValCollection.forEach(keyVal => {
+        const [key, val] = keyVal;
+        console.log(keyVal, key, val);
+        if (
+          key === 'video_thumbnail' ||
+          key === 'video_ref' ||
+          (key === 'id' && keyVal[key])
+        ) {
+          if (key === 'video_thumbnail') {
+            const videoPage = document.getElementById('video');
+            videoPage.backgroundUrl = val;
+            console.log(videoPage);
+          }
+        } else if (key === 'video_title') {
+          const h3 = document.createElement('H3');
+          h3.innerText = key;
+          video.append(h3);
+        } else {
+          const span = document.createElement('SPAN');
+          span.className = 'my-5px px-10px break-all';
+          span.innerText = `${key
+            .split('_')
+            .map(word => word[0].toUpperCase().concat(word.slice(1)))
+            .join(' ')}: ${val}`;
+          videoDetails.append(span);
+        }
+      });
+
+      return;
+    };
+  </script>
+</html>

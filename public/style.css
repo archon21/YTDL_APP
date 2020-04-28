@@ -1,0 +1,158 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Oxygen', sans-serif;
+  color: #333;
+}
+
+.y-hidden {
+    overflow-y: hidden;
+}
+
+.flex {
+  display: flex;
+}
+
+.row {
+  flex-direction: row;
+}
+
+.column {
+  flex-direction: column;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.align-start {
+  align-items: flex-start;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.wrap {
+  flex-wrap: wrap;
+}
+
+.nav {
+  min-height: 60px;
+  background: #333;
+  width: 100vw;
+}
+
+.nav__link {
+  color: #fff;
+  font-size: 25px;
+  text-decoration: none;
+  transform: all 300ms ease-in-out;
+}
+
+.nav__link:hover {
+  text-decoration: underline;
+}
+
+.my-20px {
+  margin: 20px 0;
+}
+
+.my-5px {
+  margin: 5px 0;
+}
+
+.px-10px {
+  padding: 0 10px;
+}
+
+.h-100 {
+  height: 100vh;
+}
+
+.w-100 {
+  width: 100vw;
+}
+
+.w-100p {
+  width: 100%;
+}
+
+.w-45 {
+  width: 45%;
+  min-width: 325px;
+}
+
+.w-90 {
+  width: 90%;
+}
+
+.break-all {
+    word-break: all;
+}
+
+.input {
+  width: 325px;
+  border-radius: 0;
+  outline: none;
+  border: 4px solid #333;
+  height: 60px;
+  margin: 10px;
+}
+
+.button {
+  width: 150px;
+  height: 75px;
+  background: #333;
+  color: #fff;
+  outline: 4px solid #333;
+  border: 2px solid #fff;
+  box-shadow: '3';
+  margin: 10px;
+}
+
+.home__downloader {
+  min-height: 50vh;
+  border-bottom: 2px solid #333;
+}
+
+.home__videos__container {
+  border-bottom: 2px solid #333;
+  padding: 20px 0;
+}
+
+.video__details {
+}
+
+.video__thumbnail {
+  position: relative;
+  height: 138px;
+  width: 256px;
+}
+
+.video__thumbnail__overlay {
+  position: absolute;
+  background: transparent;
+  transition: 300ms all ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333 !important;
+  font-size: 36px;
+}
+
+.video__thumbnail:hover .video__thumbnail__overlay {
+  height: 100%;
+  width: 100%;
+  background: rgba(256, 256, 256, 0.6);
+  direction: flex;
+  align-self: center;
+  z-index: 2;
+}
+
+.video__thumbnail__img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
